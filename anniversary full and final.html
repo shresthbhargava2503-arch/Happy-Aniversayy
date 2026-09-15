@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Anniversary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+  /* ============================================================
+     ✏️  EDIT THESE THINGS BEFORE YOU SEND THIS PAGE:
+
+     1. PHOTOS  — search for "PHOTO SPOTS" below in the HTML
+                  and replace each src="" with your own image
+                  (or a filename sitting next to this html file).
+
+     2. GIFT_URL — search for "GIFT_URL" in the <script> at the
+                   bottom and put the link to her actual gift.
+
+     3. NOTE_TEXT — search for "NOTE_TEXT" in the <script> and
+                    write your short note. It'll type itself out
+                    on the page.
+
+     4. TARGET TIME — search for "target.setHours" below to
+                       change the 21:35 gate time if needed.
+     ============================================================ */
+
+  :root{
+    --blush: #ffeef2;
+    --petal: #ffd6e3;
+    --rose:  #e78ca6;
+    --rose-deep: #b6446b;
+    --cream: #fffaf8;
+    --ink: #5c3444;
+    font-size: 16px;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0;
+    padding:0;
+    background: linear-gradient(180deg, var(--blush) 0%, var(--cream) 55%, var(--petal) 100%);
+    color: var(--ink);
+    font-family: 'Quicksand', sans-serif;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+
+  .display{
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  /* ---------- floating hearts backdrop ---------- */
+  #hearts{
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .heart{
+    position:absolute;
+    bottom:-10%;
+    font-size: 1.2rem;
+    color: var(--rose);
+    opacity: 0.35;
+    animation: float linear infinite;
+  }
+  @keyframes float{
+    0%{ transform: translateY(0) translateX(0) rotate(0deg); opacity:0;}
+    10%{ opacity:0.35;}
+    100%{ transform: translateY(-115vh) translateX(var(--drift,20px)) rotate(25deg); opacity:0;}
+  }
+
+  section{
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 5rem 1.5rem;
+  }
+
+  /* ---------- hero ---------- */
+  #hero{
+    min-height: 92vh;
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .eyebrow-heart{
+    font-size: 2.1rem;
+    margin-bottom: 0.4rem;
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ transform: scale(1); }
+    50%{ transform: scale(1.14); }
+  }
+
+  h1.hero-title{
+    font-size: clamp(2.4rem, 7vw, 4rem);
+    font-weight: 600;
+    line-height: 1.1;
+    margin: 0 0 0.6rem;
+    color: var(--rose-deep);
+  }
+
+  .hero-sub{
+    font-size: 1.05rem;
+    color: var(--ink);
+    opacity: 0.75;
+    max-width: 34ch;
+    margin: 0 auto 2.4rem;
+    line-height: 1.5;
+  }
+
+  .hero-photo-frame{
+    width: min(480px, 88vw);
+    aspect-ratio: 16/9;
+    border-radius: 24px;
+    overflow:hidden;
+    border: 6px solid #fff;
+    box-shadow: 0 20px 45px -18px rgba(182, 68, 107, 0.45);
+    background: var(--petal);
+  }
+  .hero-photo-frame img{
+    width:100%; height:100%; object-fit: cover; display:block;
+  }
+
+  .scroll-hint{
+    margin-top: 2.6rem;
+    font-size: 0.85rem;
+    color: var(--rose-deep);
+    opacity: 0.7;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:0.35rem;
+  }
+  .scroll-hint span{
+    display:block;
+    width: 1px; height: 26px;
+    background: var(--rose-deep);
+    animation: drop 1.6s ease-in-out infinite;
+  }
+  @keyframes drop{
+    0%{ transform: scaleY(0); transform-origin: top; opacity:0;}
+    50%{ transform: scaleY(1); transform-origin: top; opacity:1;}
+    100%{ transform: scaleY(0); transform-origin: bottom; opacity:0;}
+  }
+
+  /* ---------- reasons strip ---------- */
+  #reasons{
+    text-align:center;
+  }
+  #reasons h2{
+    font-weight: 600;
+    font-size: clamp(1.8rem, 4.5vw, 2.4rem);
+    color: var(--rose-deep);
+    margin-bottom: 0.4rem;
+  }
+  #reasons p.lede{
+    opacity:0.7;
+    margin-bottom: 2.4rem;
+    font-size: 0.95rem;
+  }
+  .chip-row{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content:center;
+    gap: 0.7rem;
+  }
+  .chip{
+    background:#fff;
+    border-radius: 999px;
+    padding: 0.6rem 1.1rem;
+    font-size: 0.9rem;
+    color: var(--rose-deep);
+    box-shadow: 0 8px 18px -12px rgba(182,68,107,0.4);
+    transform: rotate(var(--r,0deg));
+    transition: transform 0.25s ease;
+  }
+  .chip:nth-child(odd){ --r:-2deg; }
+  .chip:nth-child(even){ --r:2deg; }
+  .chip:hover{ transform: rotate(0deg) scale(1.06); }
+
+  /* ---------- confetti ---------- */
+  .confetti-piece{
+    position: fixed;
+    top: -20px;
+    width: 8px;
+    height: 14px;
+    z-index: 1000;
+    pointer-events: none;
+    animation-name: confettiFall;
+    animation-timing-function: ease-in;
+    animation-fill-mode: forwards;
+  }
+  @keyframes confettiFall{
+    0%{ transform: translateY(0) rotate(0deg); opacity: 1; }
+    100%{ transform: translateY(105vh) rotate(var(--spin, 540deg)); opacity: 0.9; }
+  }
+
+  /* ---------- note ---------- */
+  #note{
+    text-align:center;
+  }
+  .card{
+    background: #fff;
+    border-radius: 22px;
+    padding: 2.6rem 2rem;
+    box-shadow: 0 18px 40px -20px rgba(182,68,107,0.4);
+    position:relative;
+  }
+  .card::before{
+    content: "✦";
+    position:absolute;
+    top: -14px; left:50%;
+    transform: translateX(-50%);
+    background: var(--rose-deep);
+    color:#fff;
+    width: 34px; height:34px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 0.9rem;
+  }
+  #note-text{
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1.2rem, 3.2vw, 1.5rem);
+    line-height: 1.6;
+    margin:0;
+  }
+  .cursor{
+    display:inline-block;
+    width: 2px;
+    background: var(--rose-deep);
+    animation: blink 0.8s step-end infinite;
+  }
+  @keyframes blink{
+    50%{ opacity: 0; }
+  }
+
+  /* ---------- gift ---------- */
+  #gift{
+    text-align:center;
+    padding-bottom: 7rem;
+  }
+  #gift h2{
+    font-weight:600;
+    font-size: clamp(1.8rem, 4.5vw, 2.4rem);
+    color: var(--rose-deep);
+    margin-bottom: 0.5rem;
+  }
+  #gift p.lede{
+    opacity:0.7;
+    margin-bottom: 2.6rem;
+    font-size: 0.95rem;
+  }
+
+  .gift-box{
+    background: linear-gradient(135deg, #d1477a, #b6446b);
+    border: none;
+    cursor: pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding: 2.4rem 6.5rem;
+    border-radius: 999px;
+    box-shadow: 0 18px 36px -14px rgba(182,68,107,0.6);
+    transition: box-shadow 0.35s ease, transform 0.2s ease;
+    animation: pulseGlow 2.8s ease-in-out infinite;
+  }
+
+  .gift-box:hover{
+    box-shadow: 0 0 30px 8px rgba(230, 90, 140, 0.65), 0 18px 36px -12px rgba(182,68,107,0.6);
+    transform: translateY(-2px) scale(1.04);
+  }
+
+  .gift-box:active{
+    transform: scale(0.96);
+  }
+
+  @keyframes pulseGlow{
+    0%,100%{ box-shadow: 0 18px 36px -14px rgba(182,68,107,0.6); }
+    50%{ box-shadow: 0 18px 36px -14px rgba(182,68,107,0.6), 0 0 20px 4px rgba(230,90,140,0.4); }
+  }
+
+  .gift-label{
+    font-family: 'Quicksand', sans-serif;
+    font-size: 2rem;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+
+  footer{
+    text-align:center;
+    padding: 2rem 1.5rem 3rem;
+    font-size: 0.8rem;
+    color: var(--rose-deep);
+    opacity: 0.55;
+    position:relative;
+    z-index:1;
+  }
+
+  @media (max-width: 520px){
+    .grid{ grid-template-columns: repeat(2, 1fr); }
+    .gift-box{ padding: 1.8rem 3rem; }
+    .gift-label{ font-size: 1.5rem; white-space: normal; text-align: center; }
+  }
+
+  /* ================================================================
+     GATE SCREENS — blank countdown, quiz, wrong-answer, before the
+     real site (#main-site) is revealed.
+     ================================================================ */
+
+  #main-site{ display:none; }
+
+  .screen{
+    min-height: 100vh;
+    width: 100%;
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding: 2rem 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  #countdown-screen{
+    display:flex;
+  }
+  #quiz-screen, #wrong-screen{
+    display:none;
+  }
+
+  .timer-row{
+    display:flex;
+    justify-content:center;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+  }
+  .timer-unit{
+    background:#fff;
+    border-radius: 18px;
+    padding: 1rem 1.3rem;
+    min-width: 84px;
+    box-shadow: 0 12px 26px -16px rgba(182,68,107,0.45);
+  }
+  .timer-unit .num{
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 6vw, 2.8rem);
+    font-weight: 600;
+    color: var(--rose-deep);
+    line-height: 1;
+  }
+  .timer-unit .lbl{
+    font-size: 0.72rem;
+    color: var(--ink);
+    opacity: 0.65;
+    margin-top: 0.35rem;
+  }
+
+  .quiz-question{
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    color: var(--rose-deep);
+    margin-bottom: 2.4rem;
+  }
+
+  #quiz-options{
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    gap: 1.1rem;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .quiz-option-btn{
+    width: 100%;
+    background:#fff;
+    border: 2px solid var(--petal);
+    color: var(--rose-deep);
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 1.1rem 1.5rem;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 10px 22px -14px rgba(182,68,107,0.45);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  .quiz-option-btn:hover{
+    transform: translateY(-2px) scale(1.02);
+    background: var(--blush);
+    box-shadow: 0 14px 28px -14px rgba(182,68,107,0.5);
+  }
+  .quiz-option-btn:active{
+    transform: scale(0.97);
+  }
+
+  .final-option-btn{
+    width: 100%;
+    background: linear-gradient(135deg, #ff7aa2, #b6446b);
+    border: none;
+    color: #fff;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 0.02em;
+    padding: 1.5rem 1.5rem;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 16px 32px -14px rgba(182,68,107,0.6);
+    animation: pulseGlow 2.2s ease-in-out infinite;
+    transition: transform 0.2s ease;
+  }
+  .final-option-btn:hover{
+    transform: translateY(-2px) scale(1.03);
+  }
+  .final-option-btn:active{
+    transform: scale(0.97);
+  }
+
+  .wrong-text{
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: clamp(1.7rem, 5vw, 2.4rem);
+    color: var(--rose-deep);
+    margin-bottom: 2.2rem;
+  }
+
+  .back-btn{
+    background: #fff;
+    border: 2px solid var(--rose);
+    color: var(--rose-deep);
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.85rem 2.2rem;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 10px 22px -14px rgba(182,68,107,0.4);
+    transition: transform 0.2s ease;
+  }
+  .back-btn:hover{
+    transform: translateY(-2px) scale(1.03);
+  }
+  .back-btn:active{
+    transform: scale(0.96);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="hearts"></div>
+
+<!-- ===================== GATE: blank countdown page ===================== -->
+<div class="screen" id="countdown-screen">
+  <div class="timer-row" id="timer-row">
+    <div class="timer-unit"><div class="num" id="cd-hours">00</div><div class="lbl">hours</div></div>
+    <div class="timer-unit"><div class="num" id="cd-mins">00</div><div class="lbl">minutes</div></div>
+    <div class="timer-unit"><div class="num" id="cd-secs">00</div><div class="lbl">seconds</div></div>
+  </div>
+</div>
+
+<!-- ===================== GATE: quiz page ===================== -->
+<div class="screen" id="quiz-screen">
+  <p class="quiz-question display">What is my fav food?</p>
+  <div id="quiz-options"></div>
+</div>
+
+<!-- ===================== GATE: wrong answer page ===================== -->
+<div class="screen" id="wrong-screen">
+  <p class="wrong-text">wrong ans picked</p>
+  <button class="back-btn" id="backBtn">← back</button>
+</div>
+
+<!-- ===================== MAIN SITE (revealed after gate) ===================== -->
+<div id="main-site">
+
+<section id="hero">
+  <div class="eyebrow-heart">🩷</div>
+  <h1 class="hero-title display">Happy Anniversary,<br>My Love</h1>
+  <p class="hero-sub">still my favourite person, every single year. i made you a tiny corner of the internet, just because.</p>
+
+  <div class="hero-photo-frame">
+    <!-- PHOTO SPOTS: main hero photo -->
+    <img src="hero.jpg" alt="Us">
+  </div>
+
+  <div class="scroll-hint">
+    <span></span>
+    keep scrolling
+  </div>
+</section>
+
+<section id="reasons">
+  <h2 class="display">A Few Reasons, Out of Many</h2>
+  <p class="lede">tiny things I never get tired of</p>
+  <!-- ✏️ feel free to add, remove, or rewrite any of these chips -->
+  <div class="chip-row">
+    <span class="chip">🫧 your laugh</span>
+    <span class="chip">🍯 the way you say my name</span>
+    <span class="chip">🌙 late night talks</span>
+    <span class="chip">🎀 your hugs</span>
+    <span class="chip">☁️ your bad jokes</span>
+    <span class="chip">🍓 you, always</span>
+  </div>
+</section>
+
+<section id="note">
+  <div class="card">
+    <p id="note-text"></p>
+  </div>
+</section>
+
+<section id="gift">
+  <h2 class="display">One More Thing 🎀</h2>
+  <p class="lede">there's a tiny surprise wrapped up for you, go on and open it</p>
+
+  <button class="gift-box" id="giftBox" aria-label="Open your gift">
+    <span class="gift-label">Here's a lil gift for u</span>
+  </button>
+</section>
+
+<footer>made with love, just for you</footer>
+
+</div><!-- /#main-site -->
+
+<script>
+  // ---------------- floating hearts ----------------
+  const heartsContainer = document.getElementById('hearts');
+  const heartChars = ['💗','💕','🩷','✨'];
+  for(let i=0;i<24;i++){
+    const h = document.createElement('span');
+    h.className = 'heart';
+    h.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+    h.style.left = Math.random()*100 + '%';
+    h.style.setProperty('--drift', (Math.random()*80-40) + 'px');
+    h.style.animationDuration = (10 + Math.random()*10) + 's';
+    h.style.animationDelay = (Math.random()*12) + 's';
+    h.style.fontSize = (0.9 + Math.random()*1.1) + 'rem';
+    heartsContainer.appendChild(h);
+  }
+
+  // ---------------- screen switching ----------------
+  const screens = {
+    countdown: document.getElementById('countdown-screen'),
+    quiz: document.getElementById('quiz-screen'),
+    wrong: document.getElementById('wrong-screen')
+  };
+  const mainSite = document.getElementById('main-site');
+
+  function showScreen(name){
+    Object.values(screens).forEach(s => s.style.display = 'none');
+    mainSite.style.display = 'none';
+    if(name === 'main'){
+      mainSite.style.display = 'block';
+    } else {
+      screens[name].style.display = 'flex';
+    }
+    window.scrollTo(0, 0);
+  }
+
+  // ---------------- countdown to 21:35 today ----------------
+  // ✏️ target is today at 21:35:00 (9:35 PM). Change the hours/mins
+  //    below if you want a different time.
+  const target = new Date();
+  target.setHours(21, 35, 0, 0);
+
+  const hEl = document.getElementById('cd-hours');
+  const mEl = document.getElementById('cd-mins');
+  const sEl = document.getElementById('cd-secs');
+
+  let gateOpened = false;
+
+  function pad(n){ return String(n).padStart(2, '0'); }
+
+  function tickCountdown(){
+    const diff = target - new Date();
+    if(diff <= 0){
+      hEl.textContent = '00';
+      mEl.textContent = '00';
+      sEl.textContent = '00';
+      if(!gateOpened){
+        gateOpened = true;
+        openQuiz();
+      }
+      return;
+    }
+    const totalSecs = Math.floor(diff / 1000);
+    const h = Math.floor(totalSecs / 3600);
+    const m = Math.floor((totalSecs % 3600) / 60);
+    const s = totalSecs % 60;
+    hEl.textContent = pad(h);
+    mEl.textContent = pad(m);
+    sEl.textContent = pad(s);
+    setTimeout(tickCountdown, 1000);
+  }
+  tickCountdown();
+
+  // ---------------- confetti party blast ----------------
+  function launchConfettiBurst(count){
+    const colors = ['#e78ca6', '#b6446b', '#ffd6e3', '#ffffff', '#f4c869'];
+    for(let i=0;i<count;i++){
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.left = Math.random()*100 + 'vw';
+      piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+      piece.style.setProperty('--spin', (Math.random()*720-360) + 'deg');
+      piece.style.animationDuration = (2.4 + Math.random()*1.8) + 's';
+      piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      document.body.appendChild(piece);
+      setTimeout(() => piece.remove(), 4400);
+    }
+  }
+
+  function blastParty(){
+    let bursts = 0;
+    const interval = setInterval(() => {
+      launchConfettiBurst(60);
+      bursts++;
+      if(bursts >= 5) clearInterval(interval);
+    }, 350);
+  }
+
+  // ---------------- the quiz gate ----------------
+  // ✏️ EDIT the option labels below if you want to change them.
+  const QUIZ_OPTIONS = [
+    { id: 'gori', label: 'Gori tange' },
+    { id: 'patli', label: 'Patli Kamar' }
+  ];
+  const removedIds = [];
+  let lastClickedId = null;
+  const optionsContainer = document.getElementById('quiz-options');
+
+  function openQuiz(){
+    renderQuizOptions();
+    showScreen('quiz');
+  }
+
+  function renderQuizOptions(){
+    optionsContainer.innerHTML = '';
+    const remaining = QUIZ_OPTIONS.filter(o => !removedIds.includes(o.id));
+
+    if(remaining.length === 0){
+      // both wrong options are gone — the real answer appears
+      const finalBtn = document.createElement('button');
+      finalBtn.className = 'final-option-btn';
+      finalBtn.textContent = 'you as whole';
+      finalBtn.addEventListener('click', () => {
+        revealMainSite();
+      });
+      optionsContainer.appendChild(finalBtn);
+      return;
+    }
+
+    remaining.forEach(o => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-option-btn';
+      btn.textContent = o.label;
+      btn.addEventListener('click', () => {
+        lastClickedId = o.id;
+        showScreen('wrong');
+      });
+      optionsContainer.appendChild(btn);
+    });
+  }
+
+  document.getElementById('backBtn').addEventListener('click', () => {
+    if(lastClickedId && !removedIds.includes(lastClickedId)){
+      removedIds.push(lastClickedId);
+    }
+    lastClickedId = null;
+    renderQuizOptions();
+    showScreen('quiz');
+  });
+
+  function revealMainSite(){
+    showScreen('main');
+    blastParty();
+    typeNote();
+  }
+
+  // ---------------- typewriter note ----------------
+  // ✏️ EDIT NOTE_TEXT below — write whatever you want her to read.
+  const NOTE_TEXT = "write your note here before sending this page to her.";
+
+  const noteEl = document.getElementById('note-text');
+  let noteTyped = false;
+  let ni = 0;
+  function typeNote(){
+    if(noteTyped) return;
+    noteTyped = true;
+    function step(){
+      if(ni <= NOTE_TEXT.length){
+        noteEl.innerHTML = NOTE_TEXT.slice(0, ni) + '<span class="cursor">&nbsp;</span>';
+        ni++;
+        setTimeout(step, 38);
+      } else {
+        noteEl.innerHTML = NOTE_TEXT;
+      }
+    }
+    step();
+  }
+
+  // ---------------- gift box tap ----------------
+  // ✏️ EDIT GIFT_URL below — the link to her actual gift.
+  const GIFT_URL = "https://example.com/her-gift";
+
+  const giftBtn = document.getElementById('giftBox');
+  giftBtn.addEventListener('click', () => {
+    // little sparkle burst before we send her off to the gift
+    const rect = giftBtn.getBoundingClientRect();
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top + rect.height/2;
+    const burst = ['✨','💗','🩷','💫'];
+    for(let i=0;i<14;i++){
+      const s = document.createElement('span');
+      s.textContent = burst[Math.floor(Math.random()*burst.length)];
+      s.style.position = 'fixed';
+      s.style.left = cx + 'px';
+      s.style.top = cy + 'px';
+      s.style.fontSize = (0.9 + Math.random()*0.8) + 'rem';
+      s.style.pointerEvents = 'none';
+      s.style.zIndex = 999;
+      s.style.transition = 'transform 0.6s ease-out, opacity 0.6s ease-out';
+      document.body.appendChild(s);
+      const angle = Math.random()*Math.PI*2;
+      const dist = 60 + Math.random()*70;
+      requestAnimationFrame(()=>{
+        s.style.transform = `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist}px)`;
+        s.style.opacity = '0';
+      });
+      setTimeout(()=> s.remove(), 650);
+    }
+    setTimeout(() => {
+      window.location.href = GIFT_URL;
+    }, 380);
+  });
+</script>
+
+</body>
+</html>
